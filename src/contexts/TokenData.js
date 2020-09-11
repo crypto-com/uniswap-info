@@ -21,7 +21,8 @@ import {
   getBlockFromTimestamp,
   isAddress,
   getBlocksFromTimestamps,
-  splitQuery
+  splitQuery,
+  getTokenList
 } from '../utils'
 import { timeframeOptions } from '../constants'
 import { useLatestBlock } from './Application'
@@ -200,7 +201,8 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
   try {
     let current = await client.query({
       query: TOKENS_CURRENT,
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all'
     })
 
     let oneDayResult = await client.query({

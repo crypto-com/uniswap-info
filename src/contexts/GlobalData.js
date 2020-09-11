@@ -237,67 +237,70 @@ async function getGlobalData(ethPrice, oldEthPrice) {
       query: GLOBAL_DATA(),
       fetchPolicy: 'cache-first'
     })
-    data = result.data.uniswapFactories[0]
+    data = result.data.factories[0]
 
     // fetch the historical data
     let oneDayResult = await client.query({
       query: GLOBAL_DATA(oneDayBlock?.number),
       fetchPolicy: 'cache-first'
     })
-    oneDayData = oneDayResult.data.uniswapFactories[0]
+    oneDayData = oneDayResult.data.factories[0]
 
     let twoDayResult = await client.query({
       query: GLOBAL_DATA(twoDayBlock?.number),
       fetchPolicy: 'cache-first'
     })
-    twoDayData = twoDayResult.data.uniswapFactories[0]
+    twoDayData = twoDayResult.data.factories[0]
 
     let oneWeekResult = await client.query({
       query: GLOBAL_DATA(oneWeekBlock?.number),
       fetchPolicy: 'cache-first'
     })
-    const oneWeekData = oneWeekResult.data.uniswapFactories[0]
+    const oneWeekData = oneWeekResult.data.factories[0]
 
     let twoWeekResult = await client.query({
       query: GLOBAL_DATA(twoWeekBlock?.number),
       fetchPolicy: 'cache-first'
     })
-    const twoWeekData = twoWeekResult.data.uniswapFactories[0]
 
-    if (data && oneDayData && twoDayData && twoWeekData) {
+    const twoWeekData = twoWeekResult.data.factories[0]
+    if (data) {
       let [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
-        data.totalVolumeUSD,
-        oneDayData.totalVolumeUSD ? oneDayData.totalVolumeUSD : 0,
-        twoDayData.totalVolumeUSD ? twoDayData.totalVolumeUSD : 0
+        data.untrackedVolumeUSD,
+        oneDayData && oneDayData.untrackedVolumeUSD ? oneDayData.untrackedVolumeUSD : 0,
+        twoDayData && twoDayData.untrackedVolumeUSD ? twoDayData.untrackedVolumeUSD : 0
       )
-
-      const [oneWeekVolume, weeklyVolumeChange] = get2DayPercentChange(
-        data.totalVolumeUSD,
-        oneWeekData.totalVolumeUSD,
-        twoWeekData.totalVolumeUSD
-      )
+      data.oneDayVolumeUSD = oneDayVolumeUSD
+      data.volumeChangeUSD = volumeChangeUSD
 
       const [oneDayTxns, txnChange] = get2DayPercentChange(
         data.txCount,
-        oneDayData.txCount ? oneDayData.txCount : 0,
-        twoDayData.txCount ? twoDayData.txCount : 0
+        oneDayData && oneDayData.txCount ? oneDayData.txCount : 0,
+        twoDayData && twoDayData.txCount ? twoDayData.txCount : 0
       )
-
-      // format the total liquidity in USD
-      data.totalLiquidityUSD = data.totalLiquidityETH * ethPrice
-      const liquidityChangeUSD = getPercentChange(
-        data.totalLiquidityETH * ethPrice,
-        oneDayData.totalLiquidityETH * oldEthPrice
-      )
-
-      // add relevant fields with the calculated amounts
-      data.oneDayVolumeUSD = oneDayVolumeUSD
-      data.oneWeekVolume = oneWeekVolume
-      data.weeklyVolumeChange = weeklyVolumeChange
-      data.volumeChangeUSD = volumeChangeUSD
-      data.liquidityChangeUSD = liquidityChangeUSD
       data.oneDayTxns = oneDayTxns
       data.txnChange = txnChange
+
+      // oneWeekData is currently missing?!? will continue to monitor
+      if (oneWeekData && twoWeekData) {
+        const [oneWeekVolume, weeklyVolumeChange] = get2DayPercentChange(
+          data.untrackedVolumeUSD,
+          oneWeekData.untrackedVolumeUSD,
+          twoWeekData.untrackedVolumeUSD
+        )
+        data.oneWeekVolume = oneWeekVolume
+        data.weeklyVolumeChange = weeklyVolumeChange
+      }
+
+      if (oneDayData) {
+        // format the total liquidity in USD
+        data.totalLiquidityUSD = data.totalLiquidityETH * ethPrice
+        const liquidityChangeUSD = getPercentChange(
+          data.totalLiquidityETH * ethPrice,
+          oneDayData.totalLiquidityETH * oldEthPrice
+        )
+        data.liquidityChangeUSD = liquidityChangeUSD
+      }
     }
   } catch (e) {
     console.log(e)
@@ -329,8 +332,8 @@ const getChartData = async oldestDateToFetch => {
         fetchPolicy: 'cache-first'
       })
       skip += 1000
-      data = data.concat(result.data.uniswapDayDatas)
-      if (result.data.uniswapDayDatas.length < 1000) {
+      data = data.concat(result.data.dayDatas)
+      if (result.data.dayDatas.length < 1000) {
         allFound = true
       }
     }
@@ -458,7 +461,7 @@ const getEthPrice = async () => {
       fetchPolicy: 'cache-first'
     })
     const currentPrice = result?.data?.bundles[0]?.ethPrice
-    const oneDayBackPrice = resultOneDay?.data?.bundles[0]?.ethPrice
+    const oneDayBackPrice = resultOneDay?.data?.bundles[0]?.ethPrice || currentPrice
     priceChangeETH = getPercentChange(currentPrice, oneDayBackPrice)
     ethPrice = currentPrice
     ethPriceOneDay = oneDayBackPrice

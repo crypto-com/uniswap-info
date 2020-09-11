@@ -58,7 +58,7 @@ const DashGrid = styled.div`
 
   @media screen and (min-width: 740px) {
     padding: 0 1.125rem;
-    grid-template-columns: 1.5fr 1fr 1fr};
+    grid-template-columns: 1.5fr 1fr 1fr;
     grid-template-areas: ' name liq vol pool ';
   }
 
@@ -162,14 +162,14 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 10 }) {
               a1={pairData.token1.id}
               margin={!below740}
             />
-            <CustomLink style={{ marginLeft: '20px', whiteSpace: 'nowrap' }} to={'/pair/' + pairAddress} color={color}>
+            <div style={{ marginLeft: '20px', whiteSpace: 'nowrap' }} color={color}>
               <FormattedName
                 text={pairData.token0.symbol + '-' + pairData.token1.symbol}
                 maxCharacters={below600 ? 8 : 16}
                 adjustSize={true}
                 link={true}
               />
-            </CustomLink>
+            </div>
           </DataText>
           <DataText area="liq">{liquidity}</DataText>
           <DataText area="vol">{volume}</DataText>

@@ -5,7 +5,8 @@ import styled from 'styled-components'
 import { Text } from 'rebass'
 
 export default function ThemeProvider({ children }) {
-  const [darkMode] = useDarkModeManager()
+  // const [darkMode] = useDarkModeManager()
+  const darkMode = false
 
   return <StyledComponentsThemeProvider theme={theme(darkMode)}>{children}</StyledComponentsThemeProvider>
 }
@@ -26,7 +27,7 @@ const theme = (darkMode, color) => ({
 
   text1: darkMode ? '#FAFAFA' : '#1F1F1F',
   text2: darkMode ? '#C3C5CB' : '#565A69',
-  text3: darkMode ? '#6C7284' : '#888D9B',
+  text3: darkMode ? '#6C7284' : '#626973',
   text4: darkMode ? '#565A69' : '#C3C5CB',
   text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
@@ -34,12 +35,12 @@ const theme = (darkMode, color) => ({
   white: '#FFFFFF',
 
   // backgrounds / greys
-  bg1: darkMode ? '#212429' : '#FAFAFA',
+  bg1: darkMode ? '#0C1526' : '#FAFAFA',
   bg2: darkMode ? '#2C2F36' : '#F7F8FA',
   bg3: darkMode ? '#40444F' : '#EDEEF2',
   bg4: darkMode ? '#565A69' : '#CED0D9',
   bg5: darkMode ? '#565A69' : '#888D9B',
-  bg6: darkMode ? '#000' : '#FFFFFF',
+  bg6: darkMode ? '#0C1526' : '#f7f9fa',
 
   //specialty colors
   modalBG: darkMode ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)',
@@ -48,7 +49,7 @@ const theme = (darkMode, color) => ({
   divider: darkMode ? 'rgba(43, 43, 43, 0.435)' : 'rgba(43, 43, 43, 0.035)',
 
   //primary colors
-  primary1: darkMode ? '#2172E5' : '#ff007a',
+  primary1: darkMode ? '#2172E5' : '#1199FA',
   primary2: darkMode ? '#3680E7' : '#FF8CC3',
   primary3: darkMode ? '#4D8FEA' : '#FF99C9',
   primary4: darkMode ? '#376bad70' : '#F6DDE8',
@@ -72,7 +73,7 @@ const theme = (darkMode, color) => ({
   link: '#2172E5',
   blue: '2f80ed',
 
-  background: darkMode ? 'black' : `radial-gradient(50% 50% at 50% 50%, #ff007a30 0%, #fff 0%)`
+  background: darkMode ? '#0C1526' : `radial-gradient(50% 50% at 50% 50%, #ff007a30 0%, #fff 0%)`
 })
 
 const TextWrapper = styled(Text)`
@@ -103,9 +104,19 @@ export const TYPE = {
   light(props) {
     return <TextWrapper fontWeight={400} color={'text3'} fontSize={14} {...props} />
   },
-
   pink(props) {
     return <TextWrapper fontWeight={props.faded ? 400 : 600} color={props.faded ? 'text1' : 'text1'} {...props} />
+  },
+  light_medium(props) {
+    return <TextWrapper fontWeight={400} color={'text3'} fontSize={16} {...props} />
+  },
+
+  red(props) {
+    return <TextWrapper fontWeight={400} color="#e64b60" fontSize={14} {...props} />
+  },
+
+  green(props) {
+    return <TextWrapper fontWeight={400} color="#20bca4" fontSize={14} {...props} />
   }
 }
 
@@ -160,7 +171,11 @@ export const GlobalStyle = createGlobalStyle`
   @supports (font-variation-settings: normal) {
     html { font-family: 'Inter var', sans-serif; }
   }
-  
+  @font-face {
+    font-family: "SFProText";
+    src: url("../assets/fonts/SFProText-Regular.ttf");
+  }
+
   html,
   body {
     margin: 0;

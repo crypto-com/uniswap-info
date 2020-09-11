@@ -3,7 +3,7 @@ import { FACTORY_ADDRESS, BUNDLE_ID } from '../constants'
 
 export const SUBGRAPH_HEALTH = gql`
   query health {
-    indexingStatusForCurrentVersion(subgraphName: "ianlapham/uniswapv2") {
+    indexingStatusForCurrentVersion(subgraphName: "${process.env.SWAP_SUBGRAPH}") {
       synced
       health
       chains {
@@ -176,7 +176,7 @@ export const SHARE_VALUE = (pairAddress, blocks) => {
 export const ETH_PRICE = block => {
   const queryString = block
     ? `
-    query bundles {
+      query bundles {
       bundles(where: { id: ${BUNDLE_ID} } block: {number: ${block}}) {
         id
         ethPrice
@@ -189,6 +189,7 @@ export const ETH_PRICE = block => {
         ethPrice
       }
     }
+
   `
   return gql(queryString)
 }
@@ -419,8 +420,8 @@ export const PAIR_DAY_DATA_BULK = (pairs, startTimestamp) => {
 }
 
 export const GLOBAL_CHART = gql`
-  query uniswapDayDatas($startTime: Int!, $skip: Int!) {
-    uniswapDayDatas(first: 1000, skip: $skip, where: { date_gt: $startTime }, orderBy: date, orderDirection: asc) {
+  query dayDatas($startTime: Int!, $skip: Int!) {
+    dayDatas(first: 1000, skip: $skip, where: { date_gt: $startTime }, orderBy: date, orderDirection: asc) {
       id
       date
       totalVolumeUSD
@@ -433,8 +434,8 @@ export const GLOBAL_CHART = gql`
 `
 
 export const GLOBAL_DATA = block => {
-  const queryString = ` query uniswapFactories {
-      uniswapFactories(
+  const queryString = `query factories {
+      factories(
        ${block ? `block: { number: ${block}}` : ``} 
        where: { id: "${FACTORY_ADDRESS}" }) {
         id

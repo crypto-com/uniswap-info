@@ -1,20 +1,30 @@
-# Uniswap History
+# DeFi Swap Analytics 
 
-![Tests](https://github.com/Uniswap/uniswap-info/workflows/Tests/badge.svg)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![Styled With Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
 
-Transaction and liquidity pool stats for [Uniswap](https://uniswap.org).
+This provides the token, pool, and transaction information for DeFi Swap.
 
-Check it out live: [https://uniswap.info](https://uniswap.info).
+As a new DeFi protocol, DeFi Swap is designed to be the best place to swap and farm DeFi coins at the best available rate, leveraging proven and audited protocols, while offering an outstanding incentive program powered by CRO.
 
-### To Start Development
+Please visit https://crypto.com/defi for more information!
 
-###### Installing dependencies
+
+
+## Development
+
+### Install dependencies
+
 ```bash
 yarn
 ```
 
-###### Running locally
+### Run
+
 ```bash
 yarn start
 ```
+
+### Configuring the environment
+
+1. Make a copy of `.env` named `.env.local`
+2. Change `REACT_APP_NETWORK_ID` to `"{YOUR_NETWORK_ID}"`

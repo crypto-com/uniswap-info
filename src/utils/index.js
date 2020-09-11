@@ -10,11 +10,22 @@ import _Decimal from 'decimal.js-light'
 import toFormat from 'toformat'
 import { timeframeOptions } from '../constants'
 import Numeral from 'numeral'
+import axios from 'axios'
+import { TYPE } from '../Theme'
 
 // format libraries
 const Decimal = toFormat(_Decimal)
 BigNumber.set({ EXPONENTIAL_AT: 50 })
 dayjs.extend(utc)
+
+const CROP_TOKEN_LIST_MAINNET = 'https://dnkplacumu1sr.cloudfront.net/cropswap-mainnet.tokenlist.json'
+const CROP_TOKEN_LIST_ROPSTEN = 'https://dnkplacumu1sr.cloudfront.net/cropswap-ropsten.tokenlist.json'
+
+export async function getTokenList(chainid = 1) {
+  //Chainid : 1 for Mainnet and chainid 3 for ropsten
+  let cropTokenResponse = await axios.get(chainid == 1 ? CROP_TOKEN_LIST_MAINNET : CROP_TOKEN_LIST_ROPSTEN)
+  return cropTokenResponse?.data?.tokens
+}
 
 export function getTimeframe(timeWindow) {
   const utcEndTime = dayjs.utc()
@@ -402,22 +413,22 @@ export function rawPercent(percentRaw) {
 export function formattedPercent(percent, useBrackets = false) {
   percent = parseFloat(percent)
   if (!percent || percent === 0) {
-    return <Text fontWeight={500}>0%</Text>
+    return <TYPE.light fontWeight={500}>0%</TYPE.light>
   }
 
   if (percent < 0.0001 && percent > 0) {
     return (
-      <Text fontWeight={500} color="green">
+      <TYPE.light fontWeight={500} color="#20bca4">
         {'< 0.0001%'}
-      </Text>
+      </TYPE.light>
     )
   }
 
   if (percent < 0 && percent > -0.0001) {
     return (
-      <Text fontWeight={500} color="red">
+      <TYPE.light fontWeight={500} color="#e64b60">
         {'< 0.0001%'}
-      </Text>
+      </TYPE.light>
     )
   }
 

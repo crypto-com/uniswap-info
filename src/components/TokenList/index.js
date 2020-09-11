@@ -5,7 +5,6 @@ import utc from 'dayjs/plugin/utc'
 
 import { Box, Flex, Text } from 'rebass'
 import TokenLogo from '../TokenLogo'
-import { CustomLink } from '../Link'
 import Row from '../Row'
 import { Divider } from '..'
 
@@ -61,7 +60,7 @@ const DashGrid = styled.div`
     display: grid;
     grid-gap: 1em;
     grid-template-columns: 180px 1fr 1fr 1fr;
-    grid-template-areas: 'name symbol liq vol ';
+    grid-template-areas: 'name symbol liq vol';
 
     > * {
       justify-content: flex-end;
@@ -75,7 +74,7 @@ const DashGrid = styled.div`
 
   @media screen and (min-width: 1080px) {
     display: grid;
-    grid-gap: 0.5em;
+    grid-gap: 0.7em;
     grid-template-columns: 1.5fr 0.6fr 1fr 1fr 1fr 1fr;
     grid-template-areas: 'name symbol liq vol price change';
   }
@@ -177,20 +176,22 @@ function TopTokenList({ tokens, itemMax = 10 }) {
   }, [formattedTokens, itemMax, page, sortDirection, sortedColumn])
 
   const ListItem = ({ item, index }) => {
+    const percentChange =
+      item.priceChangeUSD && item.priceChangeUSD !== Number.POSITIVE_INFINITY ? item.priceChangeUSD : 0
     return (
       <DashGrid style={{ height: '48px' }} focus={true}>
         <DataText area="name" fontWeight="500">
           <Row>
-            {!below680 && <div style={{ marginRight: '1rem', width: '10px' }}>{index}</div>}
+            {!below600 && <div style={{ marginRight: '20px', width: '10px' }}>{index}</div>}
             <TokenLogo address={item.id} />
-            <CustomLink style={{ marginLeft: '16px', whiteSpace: 'nowrap' }} to={'/token/' + item.id}>
+            <div style={{ marginLeft: '16px', whiteSpace: 'nowrap' }}>
               <FormattedName
                 text={below680 ? item.symbol : item.name}
                 maxCharacters={below600 ? 8 : 16}
                 adjustSize={true}
                 link={true}
               />
-            </CustomLink>
+            </div>
           </Row>
         </DataText>
         {!below680 && (
@@ -205,7 +206,7 @@ function TopTokenList({ tokens, itemMax = 10 }) {
             {formattedNum(item.priceUSD, true)}
           </DataText>
         )}
-        {!below1080 && <DataText area="change">{formattedPercent(item.priceChangeUSD)}</DataText>}
+        {!below1080 && <DataText area="change">{formattedPercent(percentChange)}</DataText>}
       </DashGrid>
     )
   }
@@ -220,7 +221,7 @@ function TopTokenList({ tokens, itemMax = 10 }) {
             fontWeight="500"
             onClick={e => {
               setSortedColumn(SORT_FIELD.NAME)
-              setSortDirection(sortedColumn !== SORT_FIELD.NAMe ? true : !sortDirection)
+              setSortDirection(sortedColumn !== SORT_FIELD.NAME ? true : !sortDirection)
             }}
           >
             {below680 ? 'Symbol' : 'Name'} {sortedColumn === SORT_FIELD.NAME ? (!sortDirection ? '↑' : '↓') : ''}

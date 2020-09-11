@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
+import Logo from '../../assets/logo_white.svg'
 
 const rotate = keyframes`
   0% { transform: scale(1); }
@@ -17,7 +17,7 @@ const Loader = styled.div`
   width: 100%;
   animation: ${rotate} 800ms linear infinite;
   & > * {
-    width: 72px;
+    width: 280px;
   }
   ${props =>
     props.fill && !props.height
@@ -30,11 +30,9 @@ const Loader = styled.div`
 `
 
 const LocalLoader = ({ fill }) => {
-  const [darkMode] = useDarkModeManager()
-
   return (
     <Loader fill={fill}>
-      <img src={require(darkMode ? '../../assets/logo_white.svg' : '../../assets/logo.svg')} alt="loading-icon" />
+      <img src={Logo} alt="loading-icon" />
     </Loader>
   )
 }

@@ -1,4 +1,8 @@
-export const FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
+export const FACTORY_ADDRESS = process.env.FACTORY_ADDRESS
+
+export const SWAP_SUBGRAPH = process.env.SWAP_SUBGRAPH
+
+export const BLOCK_SUBGRAPH = process.env.BLOCK_SUBGRAPH
 
 export const BUNDLE_ID = '1'
 

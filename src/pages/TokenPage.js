@@ -336,6 +336,12 @@ function TokenPage({ address, history }) {
             <RowBetween mt={40} mb={'1rem'}>
               <TYPE.main fontSize={'1.125rem'}>Transactions</TYPE.main> <div />
             </RowBetween>
+
+            <span>
+              <TYPE.main fontSize={'1.125rem'} style={{ marginTop: '3rem' }}>
+                Transactions
+              </TYPE.main>
+            </span>
             <Panel rounded>
               {transactions ? <TxnList color={backgroundColor} transactions={transactions} /> : <Loader />}
             </Panel>
